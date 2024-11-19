@@ -10,7 +10,7 @@ typedef struct
 
 class objPos
 {
-    public:
+    public:  
         Pos* pos;        
         char symbol;
 
@@ -19,6 +19,7 @@ class objPos
         
         // Respect the rule of six / minimum four
         // [TODO] Implement the missing special member functions to meet the minimum four rule
+        
         
         void setObjPos(objPos o);        
         void setObjPos(int xPos, int yPos, char sym);  
