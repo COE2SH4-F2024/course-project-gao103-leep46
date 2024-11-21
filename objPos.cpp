@@ -18,8 +18,34 @@ objPos::objPos(int xPos, int yPos, char sym)
 
 // Respect the rule of six / minimum four
 // [TODO] Implement the missing special member functions to meet the minimum four rule
+//      Destructor
+objPos::~objPos() {
+	delete pos;
+}
 
+//		Copy Constructor
+objPos::objPos(const objPos &o) {
+	pos = new Pos{o.pos->x, o.pos->y};
+    symbol = o.symbol;
+}
 
+//		Copy Assignment Operator
+// For this operator, heap members are already allocated so need for "new" anymore
+// Checks whether class exists, if not, thne creates a new class with copied parameters
+// If it does, it copeies the parameters from the other object to the current one
+objPos& objPos::operator=(const objPos &o) {
+	if (this != &o) {
+        if (pos != nullptr) {
+            pos = new Pos{o.pos->x, o.pos->y};
+        } else {
+            pos->x = o.pos->x;
+            pos->y = o.pos->y;
+        }
+        symbol = o.symbol;
+	}
+
+	return *this;
+}
 
 
 void objPos::setObjPos(objPos o)
