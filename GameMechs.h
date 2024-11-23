@@ -20,6 +20,7 @@ class GameMechs
         int boardSizeX;
         int boardSizeY;
 
+        // Food object (holds most recently generated food position and ASCII symbol)
         objPos food;
 
     public:
@@ -33,6 +34,7 @@ class GameMechs
         void setLoseFlag();
 
         char getInput() const;
+        void collectACInput();
         void setInput(char this_input);
         void clearInput();
 
@@ -43,6 +45,8 @@ class GameMechs
         void incrementScore();
         
         // More methods should be added here
+        void generateFood(objPos blockOff); // position of the snake
+        objPos getFoodPos() const;
 };
 
 #endif

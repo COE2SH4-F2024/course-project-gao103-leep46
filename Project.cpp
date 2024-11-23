@@ -2,17 +2,17 @@
 #include "MacUILib.h"
 #include "objPos.h"
 
-//#include "GameMechs.h"
+#include "GameMechs.h"
 //#include "Player.h"
 
 using namespace std;
 
 #define DELAY_CONST 100000
 
-bool exitFlag;
-
+// Global Variables & Objects
+// Pointer to GameMechs class
+GameMechs *myGM;
 //Player *myPlayer;
-//GameMechs *myGM;
 
 void Initialize(void);
 void GetInput(void);
@@ -28,8 +28,8 @@ int main(void)
 
     Initialize();
 
-
-    while(exitFlag == false)  
+    // Looping the program until the exit flag (within the GameMech class) is true
+    while(myGM->getExitFlagStatus() == false)  
     {
         GetInput();
         RunLogic();
@@ -46,32 +46,50 @@ void Initialize(void)
 {
     MacUILib_init();
     MacUILib_clearScreen();
-    //myGM = new GameMechs();
+    myGM = new GameMechs();
+    
     //myPlayer = new Player(myGM);
-
-    exitFlag = false;
 }
 
 void GetInput(void)
 {
-   
+    myGM->collectACInput();
+    myGM->setInput(myGM->getInput());
 }
 
 void RunLogic(void)
 {
     //myPlayer->movePlayer();
+    if(myGM->getInput() != 0)  // if not null character
+    {
+        switch(myGM->getInput())
+        {           
+            // Exits game if player presses 'space'
+            case ' ':  
+                myGM->setExitTrue();
+                break;
+            default:
+                break;
+        }
+
+        // Clear input field in GameMechs to avoid double-processing the input
+        myGM->clearInput();
+    }
 }
 
 void DrawScreen(void)
 {
-    int i, j; // i is height, j is width
-    int width = 20; 
-    int height = 10;
 
-    MacUILib_clearScreen();    
-    for (i = 0; i < height; i++) {
-        for (j = 0; j < width; j++) {
-            if (i == 0 || j == 0 || i == height - 1 || j == width - 1) {
+    MacUILib_clearScreen();   
+    //objPos playerPos = myPlayer->getPlayerPos();
+    //objPos foodPos = myGM->food();
+
+    // Displays the board UI
+    int boardX = myGM->getBoardSizeX();
+    int boardY = myGM->getBoardSizeY(); 
+    for (int i = 0; i < boardY; i++) {
+        for (int j = 0; j < boardX; j++) {
+            if (i == 0 || j == 0 || i == boardY - 1 || j == boardX - 1) {
                 MacUILib_printf("#");
             } else {
                 MacUILib_printf(" ");
@@ -91,7 +109,5 @@ void CleanUp(void)
 {
     //delete myPlayer;
     //delete myGM;
-    MacUILib_clearScreen();    
-
     MacUILib_uninit();
 }
