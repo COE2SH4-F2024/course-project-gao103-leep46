@@ -2,7 +2,9 @@
 #include "MacUILib.h"
 #include "objPos.h"
 
+
 #include "GameMechs.h"
+#include "Player.h"
 //#include "Player.h"
 
 using namespace std;
@@ -12,7 +14,7 @@ using namespace std;
 // Global Variables & Objects
 // Pointer to GameMechs class
 GameMechs *myGM;
-//Player *myPlayer;
+Player *myPlayer;
 
 void Initialize(void);
 void GetInput(void);
@@ -47,8 +49,7 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
     myGM = new GameMechs();
-    
-    //myPlayer = new Player(myGM);
+    myPlayer = new Player(myGM);
 }
 
 void GetInput(void)
@@ -59,7 +60,7 @@ void GetInput(void)
 
 void RunLogic(void)
 {
-    //myPlayer->movePlayer();
+    myPlayer->movePlayer();
     if(myGM->getInput() != 0)  // if not null character
     {
         switch(myGM->getInput())
@@ -81,17 +82,28 @@ void DrawScreen(void)
 {
 
     MacUILib_clearScreen();   
-    //objPos playerPos = myPlayer->getPlayerPos();
+    objPos playerPos = myPlayer->getPlayerPos();
     //objPos foodPos = myGM->food();
 
     // Displays the board UI
     int boardX = myGM->getBoardSizeX();
     int boardY = myGM->getBoardSizeY(); 
+
+    
+    int playerX = playerPos.pos->x;
+    int playerY = playerPos.pos->y;
+    char playerSymbol = playerPos.symbol;
+
     for (int i = 0; i < boardY; i++) {
         for (int j = 0; j < boardX; j++) {
             if (i == 0 || j == 0 || i == boardY - 1 || j == boardX - 1) {
                 MacUILib_printf("#");
-            } else {
+            }
+            else if(i == playerY && j == playerX){
+                MacUILib_printf("%c", playerSymbol);
+            }
+
+             else {
                 MacUILib_printf(" ");
             }
         }
