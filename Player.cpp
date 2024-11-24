@@ -15,6 +15,30 @@ Player::Player(GameMechs* thisGMRef)
     
 }
 
+//copy constructor
+Player::Player(const Player &other){
+
+    mainGameMechsRef = other.mainGameMechsRef;
+    myDir = other.myDir;
+
+    playerPos.pos = new Pos(*(other.playerPos.pos));
+    playerPos.symbol = other.playerPos.symbol;
+}
+
+//copy assignment operator
+Player& Player::operator= (const Player &other){
+
+    if (this != &other){
+        delete playerPos.pos;
+
+        mainGameMechsRef = other.mainGameMechsRef;
+        myDir = other.myDir;
+
+        playerPos.pos = new Pos(*(other.playerPos.pos));  
+        playerPos.symbol = other.playerPos.symbol;
+    }
+    return *this;
+}
 
 Player::~Player()
 {

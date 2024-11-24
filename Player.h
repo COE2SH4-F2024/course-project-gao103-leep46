@@ -32,6 +32,10 @@ class Player
 
         // Need a reference to the Main Game Mechanisms
         GameMechs* mainGameMechsRef;
+
+        Player(const Player &other);
+        Player& operator= (const Player &other);
+
         
 };
 
