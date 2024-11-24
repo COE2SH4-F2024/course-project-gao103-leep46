@@ -5,7 +5,6 @@
 
 #include "GameMechs.h"
 #include "Player.h"
-//#include "Player.h"
 
 using namespace std;
 
@@ -48,8 +47,13 @@ void Initialize(void)
 {
     MacUILib_init();
     MacUILib_clearScreen();
+
+    // Creading the GameMech and player objects
     myGM = new GameMechs();
     myPlayer = new Player(myGM);
+
+    // Randomly generating the food object
+    myGM->generateFood(myPlayer->getPlayerPos());
 }
 
 void GetInput(void)
@@ -81,14 +85,20 @@ void RunLogic(void)
 void DrawScreen(void)
 {
 
-    MacUILib_clearScreen();   
+    MacUILib_clearScreen();
+
+    // Storing positions of player (snake) and food as objPos objects
     objPos playerPos = myPlayer->getPlayerPos();
-    //objPos foodPos = myGM->food();
+    objPos foodPos = myGM->getFoodPos();
 
     // Displays the board UI
     int boardX = myGM->getBoardSizeX();
     int boardY = myGM->getBoardSizeY(); 
 
+    // Initializing coordinates of the food and player (snake) to be displayed
+    int foodX = foodPos.pos->x;
+    int foodY = foodPos.pos->y;
+    char foodSymbol = foodPos.symbol;
     
     int playerX = playerPos.pos->x;
     int playerY = playerPos.pos->y;
@@ -98,12 +108,11 @@ void DrawScreen(void)
         for (int j = 0; j < boardX; j++) {
             if (i == 0 || j == 0 || i == boardY - 1 || j == boardX - 1) {
                 MacUILib_printf("#");
-            }
-            else if(i == playerY && j == playerX){
+            } else if (i == playerY && j == playerX) {
                 MacUILib_printf("%c", playerSymbol);
-            }
-
-             else {
+            } else if (i == foodY && j == foodX) {
+                MacUILib_printf("%c", foodSymbol);
+            } else {
                 MacUILib_printf(" ");
             }
         }
