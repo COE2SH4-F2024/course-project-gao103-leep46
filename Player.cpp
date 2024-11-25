@@ -29,12 +29,10 @@ Player::Player(const Player &other){
 Player& Player::operator= (const Player &other){
 
     if (this != &other){
-        delete playerPos.pos;
 
         mainGameMechsRef = other.mainGameMechsRef;
         myDir = other.myDir;
-
-        playerPos.pos = new Pos(*(other.playerPos.pos));  
+ 
         playerPos.symbol = other.playerPos.symbol;
     }
     return *this;
