@@ -36,7 +36,7 @@ class Player
         Player(const Player &other);
         Player& operator= (const Player &other);
 
-        
+        bool checkSelfCollision();
 };
 
 #endif

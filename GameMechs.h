@@ -45,8 +45,10 @@ class GameMechs
         void incrementScore();
         
         // More methods should be added here
-        void generateFood(objPos blockOff); // position of the snake
+        void generateFood(objPosArrayList* blockOff); // position of the snake
         objPos getFoodPos() const;
+
+        objPos& getFood();
 };
 
 #endif

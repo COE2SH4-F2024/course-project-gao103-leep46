@@ -106,7 +106,7 @@ void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
     updatePlayerDir();
-    // if (playerPos.pos->x)
+
 
     objPos newPos (playerPosList->getHeadElement().getObjPos().pos->x, playerPosList->getHeadElement().getObjPos().pos->y, '*');
     switch (myDir){
@@ -138,9 +138,32 @@ void Player::movePlayer()
             break;
     }
 
-    playerPosList->insertHead(newPos);
-    playerPosList->removeTail();
+    // If the snake (player) collides into food object, then the snake (player) grows (by not removing tail)
+    if (newPos.pos->x == mainGameMechsRef->getFood().getObjPos().pos->x && newPos.pos->y == mainGameMechsRef->getFood().getObjPos().pos->y) {
+        playerPosList->insertHead(newPos);
+        mainGameMechsRef->generateFood(playerPosList);
+    } else {
+        playerPosList->insertHead(newPos);
+        playerPosList->removeTail();
+    }
     
+    if (checkSelfCollision()) {
+        mainGameMechsRef->setLoseFlag();
+        mainGameMechsRef->setExitTrue();
+    }
 }
 
 // More methods to be added
+bool Player::checkSelfCollision() {
+    objPos newHead = getPlayerPos()->getHeadElement();
+
+    for (int i = 1; i < getPlayerPos()->getSize(); i++) {
+        objPos currentBody = getPlayerPos()->getElement(i);
+
+        // Returns false if the snake head collides into any part of body
+        if (newHead.pos->x == currentBody.pos->x && newHead.pos->y == currentBody.pos->y) {
+            return true;
+        }
+    }
+    return false; // Returns true if no collision occurs
+}

@@ -7,7 +7,7 @@ GameMechs::GameMechs()
     input = 0;
     exitFlag = false;
     loseFlag = false;
-    score = 0;
+    score = -1;
 
     boardSizeX = 30;
     boardSizeY = 15;
@@ -20,7 +20,7 @@ GameMechs::GameMechs(int boardX, int boardY)
     input = 0;
     exitFlag = false;
     loseFlag = false;
-    score = 0;
+    score = -1;
 
     boardSizeX = boardX;
     boardSizeY = boardY;
@@ -117,19 +117,32 @@ void GameMechs::collectACInput() {
     }
 }
 
-void GameMechs::generateFood(objPos blockOff) {
+void GameMechs::generateFood(objPosArrayList* blockOff) {
 
     srand(time(NULL));
 
     // Getting a copy of the blockOff (player) position data for access
     // Default: declaring the food's (x,y) coordinates to match the player to go into while loop
-    objPos playerPos = blockOff.getObjPos();
-    int x_coord = playerPos.pos->x, y_coord = playerPos.pos->y;
+    objPos playerPos = blockOff->getHeadElement();
+    int x_coord = 0, y_coord = 0;
 
     // Loops until the player's and food's position are different
-    while (x_coord == playerPos.pos->x && y_coord == playerPos.pos->y) {
+    bool posIdentical = true;
+    while (posIdentical) {
+        posIdentical = false;
         x_coord = (rand() % (getBoardSizeX() - 2)) + 1;
         y_coord = (rand() % (getBoardSizeY() - 2)) + 1;
+
+        for (int i = 0; i < blockOff->getSize(); i++) {
+            objPos currentPart = blockOff->getElement(i);
+
+            if (x_coord == currentPart.pos->x && y_coord == currentPart.pos->y) {
+                posIdentical = true;
+                break;
+            }
+        }
+
+        incrementScore();
     }
 
     int ascii = playerPos.symbol;
@@ -141,11 +154,12 @@ void GameMechs::generateFood(objPos blockOff) {
     
     // Updates the new randomly generated food object
     food.setObjPos(x_coord, y_coord, ascii);
-
-    // Cleaning deynamically allocated memory
-    delete playerPos.pos;
 }
         
 objPos GameMechs::getFoodPos() const {
+    return food;
+}
+
+objPos& GameMechs::getFood() {
     return food;
 }

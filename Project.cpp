@@ -38,6 +38,10 @@ int main(void)
         LoopDelay();
     }
 
+    if (myGM->getLoseFlagStatus()) {
+        MacUILib_printf("Game over! You collided into yourself.\n");
+    }
+
     CleanUp();
 
 }
@@ -53,7 +57,7 @@ void Initialize(void)
     myPlayer = new Player(myGM);
 
     // Randomly generating the food object
-    myGM->generateFood(myPlayer->getPlayerPos()->getHeadElement());
+    myGM->generateFood(myPlayer->getPlayerPos());
 }
 
 void GetInput(void)
@@ -123,6 +127,7 @@ void DrawScreen(void)
         }
         MacUILib_printf("\n");
     }
+    MacUILib_printf("Score: %d\n", myGM->getScore());
 }
 
 void LoopDelay(void)
