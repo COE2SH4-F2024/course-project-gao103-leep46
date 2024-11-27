@@ -50,7 +50,7 @@ int objPosArrayList::getSize() const
 void objPosArrayList::insertHead(objPos thisPos)
 {
     if (listSize >= arrayCapacity){
-        int newArrayCapacity = arrayCapacity * 2;
+        int newArrayCapacity = arrayCapacity + 1;
         objPos* newList =  new objPos[newArrayCapacity];
 
         for (int i = 0; i < listSize; i++){
@@ -76,7 +76,7 @@ void objPosArrayList::insertHead(objPos thisPos)
 void objPosArrayList::insertTail(objPos thisPos)
 {
     if (listSize >= arrayCapacity){
-        int newArrayCapacity = arrayCapacity * 2;
+        int newArrayCapacity = arrayCapacity + 1;
         objPos* newList =  new objPos[newArrayCapacity];
 
         for (int i = 0; i < listSize; i++){

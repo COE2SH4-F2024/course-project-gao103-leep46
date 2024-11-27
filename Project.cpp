@@ -1,8 +1,7 @@
 #include <iostream>
 #include "MacUILib.h"
 #include "objPos.h"
-
-
+#include "objPosArrayList.h"
 #include "GameMechs.h"
 #include "Player.h"
 
@@ -14,6 +13,7 @@ using namespace std;
 // Pointer to GameMechs class
 GameMechs *myGM;
 Player *myPlayer;
+objPosArrayList *arrayList;
 
 void Initialize(void);
 void GetInput(void);
@@ -53,7 +53,7 @@ void Initialize(void)
     myPlayer = new Player(myGM);
 
     // Randomly generating the food object
-    myGM->generateFood(myPlayer->getPlayerPos());
+    myGM->generateFood(myPlayer->getPlayerPos()->getHeadElement());
 }
 
 void GetInput(void)
@@ -88,7 +88,7 @@ void DrawScreen(void)
     MacUILib_clearScreen();
 
     // Storing positions of player (snake) and food as objPos objects
-    objPos playerPos = myPlayer->getPlayerPos();
+    objPosArrayList* playerPosList = myPlayer->getPlayerPos();
     objPos foodPos = myGM->getFoodPos();
 
     // Displays the board UI
@@ -100,20 +100,25 @@ void DrawScreen(void)
     int foodY = foodPos.pos->y;
     char foodSymbol = foodPos.symbol;
     
-    int playerX = playerPos.pos->x;
-    int playerY = playerPos.pos->y;
-    char playerSymbol = playerPos.symbol;
 
     for (int i = 0; i < boardY; i++) {
         for (int j = 0; j < boardX; j++) {
             if (i == 0 || j == 0 || i == boardY - 1 || j == boardX - 1) {
                 MacUILib_printf("#");
-            } else if (i == playerY && j == playerX) {
-                MacUILib_printf("%c", playerSymbol);
-            } else if (i == foodY && j == foodX) {
+            }
+            else if (i == foodY && j == foodX) {
                 MacUILib_printf("%c", foodSymbol);
-            } else {
-                MacUILib_printf(" ");
+            }
+            else {
+
+                char emptySpace = ' ';
+                for (int k = 0; k < playerPosList->getSize(); k++){
+                    objPos playerPos = playerPosList->getElement(k);
+                    if (i == playerPos.pos->y && j == playerPos.pos->x){
+                        emptySpace = playerPos.symbol;
+                    }
+                }
+                MacUILib_printf("%c", emptySpace);
             }
         }
         MacUILib_printf("\n");
@@ -130,5 +135,8 @@ void CleanUp(void)
 {
     //delete myPlayer;
     //delete myGM;
+    delete myPlayer;
+    delete myGM;
+    delete arrayList;
     MacUILib_uninit();
 }

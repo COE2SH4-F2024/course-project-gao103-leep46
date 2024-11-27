@@ -7,12 +7,15 @@ Player::Player(GameMechs* thisGMRef)
     myDir = STOP;
 
     // more actions to be included
-    playerPos.pos = new Pos();
-
-    playerPos.pos->x = mainGameMechsRef->getBoardSizeX()/2;
-    playerPos.pos->y = mainGameMechsRef->getBoardSizeY()/2;
-    playerPos.symbol = '*';
+    playerPosList = new objPosArrayList();
+    objPos headElement(mainGameMechsRef -> getBoardSizeX()/2, mainGameMechsRef -> getBoardSizeY()/2, '*');
     
+    playerPosList -> insertHead(headElement);
+    //int centerX = mainGameMechsRef->getBoardSizeX() / 2; // X-coordinate of the center
+    //int centerY = mainGameMechsRef->getBoardSizeY() / 2; // Y-coordinate of the center
+    //playerPosList->insertHead(objPos(centerX, centerY, '*'));       // Head
+    //playerPosList->insertTail(objPos(centerX, centerY + 1, '*'));  // Body segment
+    //playerPosList->insertTail(objPos(centerX, centerY + 2, '*'));  // Tail segment
 }
 
 //copy constructor
@@ -21,8 +24,7 @@ Player::Player(const Player &other){
     mainGameMechsRef = other.mainGameMechsRef;
     myDir = other.myDir;
 
-    playerPos.pos = new Pos(*(other.playerPos.pos));
-    playerPos.symbol = other.playerPos.symbol;
+    playerPosList = new objPosArrayList(*other.playerPosList);
 }
 
 //copy assignment operator
@@ -33,7 +35,8 @@ Player& Player::operator= (const Player &other){
         mainGameMechsRef = other.mainGameMechsRef;
         myDir = other.myDir;
  
-        playerPos.symbol = other.playerPos.symbol;
+        delete playerPosList;
+        playerPosList = new objPosArrayList(*other.playerPosList);
     }
     return *this;
 }
@@ -41,14 +44,14 @@ Player& Player::operator= (const Player &other){
 Player::~Player()
 {
     // delete any heap members here
-    delete playerPos.pos;
+    delete playerPosList;
 }
 
-objPos Player::getPlayerPos() const
+objPosArrayList* Player::getPlayerPos() const
 {
     // return the reference to the playerPos arrray list
 
-    return playerPos;
+    return playerPosList;
 }
 
 void Player::updatePlayerDir()
@@ -105,34 +108,38 @@ void Player::movePlayer()
     updatePlayerDir();
     // if (playerPos.pos->x)
 
+    objPos newPos (playerPosList->getHeadElement().getObjPos().pos->x, playerPosList->getHeadElement().getObjPos().pos->y, '*');
     switch (myDir){
         case UP:
-            playerPos.pos->y--;
-            if (playerPos.pos->y < 1) {  
-                playerPos.pos->y = mainGameMechsRef->getBoardSizeY() - 2;
+            newPos.pos->y--;
+            if (newPos.pos->y < 1) {  
+                newPos.pos->y = mainGameMechsRef->getBoardSizeY() - 2;
             }
             break;
         case DOWN:
-            playerPos.pos->y++;
-            if (playerPos.pos->y >= mainGameMechsRef->getBoardSizeY() - 1) {  
-                playerPos.pos->y = 1;
+            newPos.pos->y++;
+            if (newPos.pos->y >= mainGameMechsRef->getBoardSizeY() - 1) {  
+                newPos.pos->y = 1;
             }
             break;
         case LEFT:
-            playerPos.pos->x--;
-            if (playerPos.pos->x < 1) {  
-                playerPos.pos->x = mainGameMechsRef->getBoardSizeX() - 2;
+            newPos.pos->x--;
+            if (newPos.pos->x < 1) {  
+                newPos.pos->x = mainGameMechsRef->getBoardSizeX() - 2;
             }
             break;
         case RIGHT:
-            playerPos.pos->x++;
-            if (playerPos.pos->x >= mainGameMechsRef->getBoardSizeX() - 1) {  
-                playerPos.pos->x = 1;
+            newPos.pos->x++;
+            if (newPos.pos->x >= mainGameMechsRef->getBoardSizeX() - 1) {  
+                newPos.pos->x = 1;
             }
             break;
         case STOP: 
             break;
     }
+
+    playerPosList->insertHead(newPos);
+    playerPosList->removeTail();
     
 }
 
