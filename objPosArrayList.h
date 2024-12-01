@@ -7,11 +7,15 @@
 
 class objPosArrayList
 {
+    // Private Variables
     private:
         objPos* aList;
         int listSize;
         int arrayCapacity;
 
+    // Public Variables
+    // Includes constructor, dectructor, getters, setters, insert/remove methods,
+    // copy operator, and copy assignment operator
     public:
         objPosArrayList();
         ~objPosArrayList();

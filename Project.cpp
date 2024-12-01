@@ -10,7 +10,6 @@ using namespace std;
 #define DELAY_CONST 100000
 
 // Global Variables & Objects
-// Pointer to GameMechs class
 GameMechs *myGM;
 Player *myPlayer;
 objPosArrayList *arrayList;
@@ -37,7 +36,8 @@ int main(void)
         DrawScreen();
         LoopDelay();
     }
-
+    
+    // Special message that's only displayed if the lose flag is true
     if (myGM->getLoseFlagStatus()) {
         MacUILib_printf("Game over! You collided into yourself.\n");
     }
@@ -52,7 +52,7 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
-    // Creading the GameMech and player objects
+    // Creating the GameMech and player objects
     myGM = new GameMechs();
     myPlayer = new Player(myGM);
 
@@ -62,14 +62,15 @@ void Initialize(void)
 
 void GetInput(void)
 {
+    // Collecting asynchronous input and setting input key (if player presses a key)
     myGM->collectACInput();
     myGM->setInput(myGM->getInput());
 }
 
 void RunLogic(void)
 {
-    myPlayer->movePlayer();
-    if(myGM->getInput() != 0)  // if not null character
+    myPlayer->movePlayer(); // Moves the player position
+    if(myGM->getInput() != 0)  // If the key pressed is not the null character
     {
         switch(myGM->getInput())
         {           
@@ -104,7 +105,10 @@ void DrawScreen(void)
     int foodY = foodPos.pos->y;
     char foodSymbol = foodPos.symbol;
     
-
+    // First, draws the borders (30x15) with the # symbol
+    // Then, draws the food object with its own symbol
+    // Then, it draws the snake (body) with its own symbol
+    // If the snake (body) isn't in a coordinate, an empty symbol ' ' is drawn over it instead
     for (int i = 0; i < boardY; i++) {
         for (int j = 0; j < boardX; j++) {
             if (i == 0 || j == 0 || i == boardY - 1 || j == boardX - 1) {
@@ -114,7 +118,6 @@ void DrawScreen(void)
                 MacUILib_printf("%c", foodSymbol);
             }
             else {
-
                 char emptySpace = ' ';
                 for (int k = 0; k < playerPosList->getSize(); k++){
                     objPos playerPos = playerPosList->getElement(k);
@@ -127,6 +130,8 @@ void DrawScreen(void)
         }
         MacUILib_printf("\n");
     }
+
+    // Displays the player's score
     MacUILib_printf("Score: %d\n", myGM->getScore());
 }
 
@@ -138,6 +143,7 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
+    // Deletes the objects to prevent memory leakage
     delete myPlayer;
     delete myGM;
     delete arrayList;

@@ -142,7 +142,7 @@ void testInsertHead_5Element()
 
 	result &= assert_equal(expectedCheck, actualCheck);
 
-	// Next, chech the body elements at index 1, 2, and 3.
+	// Next, chechk the body elements at index 1, 2, and 3.
 	for(int i = 1; i < actualSize - 1; i++)
 	{
 		currentPos = thisList.getElement(i);

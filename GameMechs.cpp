@@ -27,8 +27,8 @@ GameMechs::GameMechs(int boardX, int boardY)
     food.setObjPos(5, 5, '0');
 }
 
-// Do you need a destructor?
-// No, since there's no dynamic memory allocation ("new") in the constructors
+// Nothing in destructor
+// This is because there's no dynamic memory allocation ("new") in the constructors
 GameMechs::~GameMechs()
 {
     
@@ -47,7 +47,6 @@ bool GameMechs::getLoseFlagStatus() const
 }
     
 // Returns the user's pressed key
-// Gets the exit flag to true if user presses 'space'
 char GameMechs::getInput() const 
 {
     return input;
@@ -104,35 +103,36 @@ void GameMechs::clearInput()
     input = '\0';
 }
 
-// More methods should be added here
-
 // Collects the asynchronous user input (or key pressed)
 void GameMechs::collectACInput() {
     if(MacUILib_hasChar()) {
         input = MacUILib_getChar();
     }
     
+    // The space bar is the key to exit the game by default
     if (input == ' ') {
         setExitTrue();
     }
 }
 
+// Generates the coordinates and symbol of the food object
 void GameMechs::generateFood(objPosArrayList* blockOff) {
 
+    // Setting up random number generator
     srand(time(NULL));
 
     // Getting a copy of the blockOff (player) position data for access
-    // Default: declaring the food's (x,y) coordinates to match the player to go into while loop
     objPos playerPos = blockOff->getHeadElement();
     int x_coord = 0, y_coord = 0;
-
-    // Loops until the player's and food's position are different
     bool posIdentical = true;
+
+    // Loops until the player's (head & body) and food's position are different
     while (posIdentical) {
         posIdentical = false;
         x_coord = (rand() % (getBoardSizeX() - 2)) + 1;
         y_coord = (rand() % (getBoardSizeY() - 2)) + 1;
 
+        // Checks the food's position to each body part of the snake (player) and determines whether they are the same
         for (int i = 0; i < blockOff->getSize(); i++) {
             objPos currentPart = blockOff->getElement(i);
 
@@ -142,6 +142,7 @@ void GameMechs::generateFood(objPosArrayList* blockOff) {
             }
         }
 
+        // Calls the method to add to the score each time the player collects a food object
         incrementScore();
     }
 
@@ -155,11 +156,13 @@ void GameMechs::generateFood(objPosArrayList* blockOff) {
     // Updates the new randomly generated food object
     food.setObjPos(x_coord, y_coord, ascii);
 }
-        
+
+// Returns the food as an objPos
 objPos GameMechs::getFoodPos() const {
     return food;
 }
 
+// Returns the food as the address of an objPos
 objPos& GameMechs::getFood() {
     return food;
 }
