@@ -138,8 +138,6 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
-    //delete myPlayer;
-    //delete myGM;
     delete myPlayer;
     delete myGM;
     delete arrayList;

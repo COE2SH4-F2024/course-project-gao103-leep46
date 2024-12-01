@@ -34,9 +34,10 @@ Player& Player::operator= (const Player &other){
 
         mainGameMechsRef = other.mainGameMechsRef;
         myDir = other.myDir;
- 
-        delete playerPosList;
-        playerPosList = new objPosArrayList(*other.playerPosList);
+
+        objPosArrayList* newPosList = new objPosArrayList(*other.playerPosList);
+        delete playerPosList; // deletes old playerPosList
+        playerPosList = newPosList;
     }
     return *this;
 }

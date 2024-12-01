@@ -32,7 +32,7 @@ objPosArrayList::objPosArrayList(const objPosArrayList &other){
 //copy assignment operator
 objPosArrayList& objPosArrayList::operator=(const objPosArrayList &other){
     if (this != &other){
-
+        delete[] aList; // Deletes old array to prevent memory leakage
         arrayCapacity = other.arrayCapacity;
         listSize = other.listSize;
 
